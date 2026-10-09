@@ -528,7 +528,7 @@ function renderOnboarding() {
       <details ${d.income2.amount ? 'open' : ''}><summary>Un'altra entrata fissa (es. stipendio del partner)</summary>
         <label class="field"><span>Nome</span><input id="ob-i2-name" placeholder="es. Stipendio Mario Rossi" value="${esc(d.income2.name)}"></label>
         <div class="grid2"><label class="field"><span>Importo</span><input id="ob-i2-amount" inputmode="decimal" value="${esc(d.income2.amount)}"></label>
-        <label class="field"><span>Giorno</span><input id="ob-i2-day" type="number" min="1" max="31" value="${d.income2.day}"></label></div>
+        <label class="field"><span>Giorno</span><select id="ob-i2-day">${dayOptions(d.income2.day)}</select></label></div>
       </details>${nav()}</section>`;
   }
   if (ui.ob === 2) {
@@ -536,7 +536,7 @@ function renderOnboarding() {
       ${d.fixed.map((f, i) => `<div class="ob-row">
         <input data-ob="fixed.${i}.name" value="${esc(f.name)}" aria-label="Nome">
         <input data-ob="fixed.${i}.amount" inputmode="decimal" placeholder="€" value="${esc(f.amount)}" aria-label="Importo">
-        <input data-ob="fixed.${i}.day" type="number" min="1" max="31" value="${f.day}" aria-label="Giorno">
+        <select data-ob="fixed.${i}.day" aria-label="Giorno">${dayOptions(f.day)}</select>
         <select data-ob="fixed.${i}.freq" aria-label="Frequenza">${Object.entries(FREQ).map(([k, v]) => `<option value="${k}" ${f.freq === k ? 'selected' : ''}>${v.short}</option>`).join('')}</select>
       </div>`).join('')}
       <div class="ob-row-head small muted"><span>nome</span><span>importo</span><span>giorno</span><span>ogni</span></div>
@@ -663,6 +663,8 @@ function formData(form) {
   return o;
 }
 
+const dayOptions = (sel) => Array.from({ length: 31 }, (_, i) => `<option value="${i + 1}" ${Number(sel) === i + 1 ? 'selected' : ''}>${i + 1}</option>`).join('');
+
 const catPicker = (kind, selected) => `<div class="cat-grid" role="radiogroup" aria-label="Categoria">${catsOf(kind).map((c) => `
   <label class="cat-opt"><input type="radio" name="categoryId" value="${c.id}" ${c.id === selected ? 'checked' : ''}>${icon(c)}<span>${esc(c.name)}</span></label>`).join('')}</div>`;
 
@@ -735,7 +737,7 @@ function openRec(r = null, type = 'expense') {
     <label class="field"><span>Nome</span><input name="name" value="${esc(x.name)}" required maxlength="50" placeholder="es. Affitto" ${r ? '' : 'autofocus'}></label>
     <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" value="${x.amount ? moneyPlain(x.amount) : ''}" placeholder="0,00" aria-label="Importo"></label>
     <div class="grid2">
-      <label class="field"><span>Giorno del mese</span><input type="number" name="day" min="1" max="31" value="${x.day}"></label>
+      <label class="field"><span>Giorno del mese</span><select name="day">${dayOptions(x.day)}</select></label>
       <label class="field"><span>Frequenza</span><select name="freq">${Object.entries(FREQ).map(([k, v]) => `<option value="${k}" ${x.freq === k ? 'selected' : ''}>${v.label}</option>`).join('')}</select></label>
     </div>
     <div class="grid2">
