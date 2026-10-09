@@ -219,7 +219,7 @@ function txRow(t) {
 }
 
 // ================= MOVIMENTI =================
-function renderTx() {
+function renderTx(resultsOnly = false) {
   const today = todayISO();
   let cyc = cycleFor(today, state.settings.payday);
   for (let i = 0; i < ui.txOffset; i++) cyc = prevCycle(cyc, state.settings.payday);
@@ -239,21 +239,23 @@ function renderTx() {
   const groups = new Map();
   for (const t of list) { if (!groups.has(t.date)) groups.set(t.date, []); groups.get(t.date).push(t); }
   const filters = [['all', 'Tutti'], ['variable', 'Variabili'], ['fixed', 'Fisse'], ['income', 'Entrate'], ['save', 'Risparmi'], ['expense', 'Tutte le uscite']];
+  const results = `<div class="sum-row"><span>Uscite <b>${money(out)}</b></span><span>Entrate <b class="good">${money(inc)}</b></span><span class="muted">${list.length} mov.</span></div>
+  ${list.length ? [...groups.entries()].map(([d, ts]) => `
+    <div class="day-group"><div class="day-head"><span>${fmtDayHeader(d)}</span><span class="muted">${money(sum(ts.filter((t) => t.type === 'expense'), (t) => t.amount))}</span></div>
+    <ul class="txlist">${ts.map(txRow).join('')}</ul></div>`).join('') : '<p class="empty">Nessun movimento trovato.</p>'}`;
+  if (resultsOnly) return results;
   return `
   <div class="cycle-nav">
     <button class="icon-btn" data-action="tx-prev" aria-label="Ciclo precedente">‹</button>
     <div><b>${fmtDate(cyc.start)} – ${fmtDate(cyc.end, { year: true })}</b><span class="muted small">${ui.txOffset === 0 ? 'ciclo attuale' : `${ui.txOffset} ${ui.txOffset === 1 ? 'ciclo fa' : 'cicli fa'}`}</span></div>
     <button class="icon-btn" data-action="tx-next" ${ui.txOffset === 0 ? 'disabled' : ''} aria-label="Ciclo successivo">›</button>
   </div>
-  <div class="search"><input type="search" placeholder="Cerca nota, categoria o importo" value="${esc(ui.search)}" data-bind="search" aria-label="Cerca"></div>
+  <div class="search"><input type="search" placeholder="Cerca nota, categoria o importo" value="${esc(ui.search)}" data-bind="search" aria-label="Cerca" enterkeyhint="search" autocomplete="off" autocorrect="off" spellcheck="false"></div>
   <div class="chips scroll">${filters.map(([k, l]) => `<button class="chip ${ui.filter === k ? 'on' : ''}" data-action="tx-filter" data-f="${k}">${l}</button>`).join('')}</div>
   <div class="chips scroll">
     <select data-bind="cat" aria-label="Categoria"><option value="">Tutte le categorie</option>${cats().map((c) => `<option value="${c.id}" ${ui.cat === c.id ? 'selected' : ''}>${esc(c.icon)} ${esc(c.name)}</option>`).join('')}</select>
   </div>
-  <div class="sum-row"><span>Uscite <b>${money(out)}</b></span><span>Entrate <b class="good">${money(inc)}</b></span><span class="muted">${list.length} mov.</span></div>
-  ${list.length ? [...groups.entries()].map(([d, ts]) => `
-    <div class="day-group"><div class="day-head"><span>${fmtDayHeader(d)}</span><span class="muted">${money(sum(ts.filter((t) => t.type === 'expense'), (t) => t.amount))}</span></div>
-    <ul class="txlist">${ts.map(txRow).join('')}</ul></div>`).join('') : '<p class="empty">Nessun movimento trovato.</p>'}
+  <div id="txResults">${results}</div>
   `;
 }
 
@@ -516,7 +518,7 @@ function renderOnboarding() {
     return `<section class="ob">
       <div class="ob-hero"><img class="logo" src="logo.svg" alt=""><h1>Formichina</h1><p>Ogni giorno ti dice quanto puoi spendere, senza collegare banca o carte.</p></div>
       <ul class="ob-points"><li>I dati restano su questo telefono</li><li>Nessun account, nessuna pubblicità</li><li>Funziona anche offline</li></ul>
-      <label class="field"><span>Come ti chiami?</span><input id="ob-name" value="${esc(d.name)}" maxlength="40" autocomplete="given-name"></label>
+      <label class="field"><span>Come ti chiami?</span><input id="ob-name" value="${esc(d.name)}" maxlength="40" autocomplete="given-name" autocapitalize="words" enterkeyhint="next"></label>
       <button class="btn full" data-action="ob-next">Iniziamo</button>
       <div class="btn-row center"><button class="link" data-action="demo">Prova con dati di esempio</button><button class="link" data-action="import-json">Ripristina un backup</button></div>
     </section>`;
@@ -524,32 +526,35 @@ function renderOnboarding() {
   if (ui.ob === 1) {
     return `<section class="ob">${dots}<h2>Le entrate</h2><p class="muted">Il budget segue il ciclo dello stipendio, non il mese solare.</p>
       <label class="field"><span>Giorno in cui arriva lo stipendio</span><select id="ob-payday">${Array.from({ length: 31 }, (_, i) => `<option ${d.payday === i + 1 ? 'selected' : ''}>${i + 1}</option>`).join('')}</select></label>
-      <label class="field"><span>Stipendio netto mensile</span><input id="ob-salary" inputmode="decimal" placeholder="es. 1.650" value="${esc(d.salary)}"></label>
+      <label class="field"><span>Stipendio netto mensile</span><input id="ob-salary" inputmode="decimal" placeholder="es. 1.650" value="${esc(d.salary)}" autocomplete="off" enterkeyhint="next"></label>
       <details ${d.income2.amount ? 'open' : ''}><summary>Un'altra entrata fissa (es. stipendio del partner)</summary>
-        <label class="field"><span>Nome</span><input id="ob-i2-name" placeholder="es. Stipendio Mario Rossi" value="${esc(d.income2.name)}"></label>
-        <div class="grid2"><label class="field"><span>Importo</span><input id="ob-i2-amount" inputmode="decimal" value="${esc(d.income2.amount)}"></label>
+        <label class="field"><span>Nome</span><input id="ob-i2-name" placeholder="es. Stipendio Mario Rossi" value="${esc(d.income2.name)}" autocapitalize="sentences"></label>
+        <div class="grid2"><label class="field"><span>Importo</span><input id="ob-i2-amount" inputmode="decimal" enterkeyhint="done" placeholder="0" value="${esc(d.income2.amount)}" autocomplete="off"></label>
         <label class="field"><span>Giorno</span><select id="ob-i2-day">${dayOptions(d.income2.day)}</select></label></div>
       </details>${nav()}</section>`;
   }
   if (ui.ob === 2) {
     return `<section class="ob">${dots}<h2>Le spese fisse</h2><p class="muted">Quelle che arrivano comunque. Lascia vuoto ciò che non hai; potrai cambiarle in seguito.</p>
-      ${d.fixed.map((f, i) => `<div class="ob-row">
-        <input data-ob="fixed.${i}.name" value="${esc(f.name)}" aria-label="Nome">
-        <input data-ob="fixed.${i}.amount" inputmode="decimal" placeholder="€" value="${esc(f.amount)}" aria-label="Importo">
-        <select data-ob="fixed.${i}.day" aria-label="Giorno">${dayOptions(f.day)}</select>
-        <select data-ob="fixed.${i}.freq" aria-label="Frequenza">${Object.entries(FREQ).map(([k, v]) => `<option value="${k}" ${f.freq === k ? 'selected' : ''}>${v.short}</option>`).join('')}</select>
+      ${d.fixed.map((f, i) => `<div class="ob-card">
+        <label class="field"><span>Voce</span><input data-ob="fixed.${i}.name" value="${esc(f.name)}" placeholder="es. Palestra" autocapitalize="sentences" enterkeyhint="next"></label>
+        <div class="grid3">
+          <label class="field"><span>Importo €</span><input data-ob="fixed.${i}.amount" inputmode="decimal" placeholder="0" value="${esc(f.amount)}" enterkeyhint="next" autocomplete="off"></label>
+          <label class="field"><span>Giorno</span><select data-ob="fixed.${i}.day">${dayOptions(f.day)}</select></label>
+          <label class="field"><span>Ogni</span><select data-ob="fixed.${i}.freq">${Object.entries(FREQ).map(([k, v]) => `<option value="${k}" ${f.freq === k ? 'selected' : ''}>${v.short}</option>`).join('')}</select></label>
+        </div>
       </div>`).join('')}
-      <div class="ob-row-head small muted"><span>nome</span><span>importo</span><span>giorno</span><span>ogni</span></div>
       <button class="btn ghost full" data-action="ob-addfixed">+ Altra spesa fissa</button>${nav()}</section>`;
   }
   if (ui.ob === 3) {
     return `<section class="ob">${dots}<h2>Risparmio e scadenze</h2>
-      <label class="field"><span>Quanto vuoi mettere da parte ogni mese?</span><input id="ob-saving" inputmode="decimal" placeholder="es. 150" value="${esc(d.saving)}"></label>
+      <label class="field"><span>Quanto vuoi mettere da parte ogni mese?</span><input id="ob-saving" inputmode="decimal" placeholder="es. 150" value="${esc(d.saving)}" autocomplete="off" enterkeyhint="next"></label>
       <p class="muted small">Spese annuali da preparare un po' alla volta (lascia vuoto se non servono):</p>
-      ${d.funds.map((f, i) => `<div class="ob-row fund">
-        <input data-ob="funds.${i}.name" value="${esc(f.name)}" aria-label="Nome">
-        <input data-ob="funds.${i}.amount" inputmode="decimal" placeholder="€" value="${esc(f.amount)}" aria-label="Importo">
-        <input data-ob="funds.${i}.due" type="date" value="${esc(f.due)}" aria-label="Scadenza">
+      ${d.funds.map((f, i) => `<div class="ob-card">
+        <label class="field"><span>Spesa</span><input data-ob="funds.${i}.name" value="${esc(f.name)}" autocapitalize="sentences" enterkeyhint="next"></label>
+        <div class="grid2">
+          <label class="field"><span>Importo €</span><input data-ob="funds.${i}.amount" inputmode="decimal" placeholder="0" value="${esc(f.amount)}" enterkeyhint="next" autocomplete="off"></label>
+          <label class="field"><span>Scadenza</span><input data-ob="funds.${i}.due" type="date" value="${esc(f.due)}"></label>
+        </div>
       </div>`).join('')}${nav()}</section>`;
   }
   const preview = obBuild(true);
@@ -645,10 +650,19 @@ function openSheet(title, body, onSubmit, opts = {}) {
     ${opts.noFooter ? '' : `<footer>${opts.extraButtons || ''}<button class="btn" type="submit">${esc(opts.submitLabel || 'Salva')}</button></footer>`}
   </form>`;
   sheetSubmit = onSubmit;
-  if (!dlg.open) dlg.showModal();
+  if (!dlg.open) {
+    dlg.showModal();
+    sheetOpenedAt = Date.now();
+    // per un attimo il foglio ignora i tocchi: un doppio tocco sul + non preme nulla al suo interno
+    dlg.classList.add('opening');
+    setTimeout(() => dlg.classList.remove('opening'), 450);
+  }
+  const body2 = dlg.querySelector('.sheet-body');
+  if (body2) body2.scrollTop = 0;
   const first = dlg.querySelector(opts.focus || '[autofocus]');
-  if (first) setTimeout(() => first.focus(), 60);
+  if (first) first.focus({ preventScroll: true });
 }
+let sheetOpenedAt = 0;
 
 function closeSheet() { const d = sheet(); if (d.open) d.close(); sheetSubmit = null; }
 
@@ -660,10 +674,19 @@ function formData(form) {
     else if (el.type === 'radio') { if (el.checked) o[el.name] = el.value; }
     else o[el.name] = el.value;
   }
+  if (o.iconCustom && o.iconCustom.trim()) o.icon = o.iconCustom.trim();
   return o;
 }
 
 const dayOptions = (sel) => Array.from({ length: 31 }, (_, i) => `<option value="${i + 1}" ${Number(sel) === i + 1 ? 'selected' : ''}>${i + 1}</option>`).join('');
+
+const ICONS = ['📦', '🛒', '☕', '🍕', '⛽', '🚗', '🏠', '💡', '💊', '👕', '🎬', '🎒', '🎁', '🐾', '📺', '📱', '✈️', '🏖️', '🎄', '🧾', '🛟', '🐷', '🎯', '💶', '✨', '🏋️', '📚', '🧸', '🔧', '💈', '•'];
+const iconPicker = (current) => {
+  const cur = current || '•';
+  const custom = ICONS.includes(cur) ? '' : cur;
+  return `<div class="field"><span>Icona</span><div class="icon-grid" role="radiogroup" aria-label="Icona">${ICONS.map((ic) => `<label class="icon-opt"><input type="radio" name="icon" value="${ic}" ${ic === cur ? 'checked' : ''}><span>${ic}</span></label>`).join('')}</div>
+    <input name="iconCustom" class="icon-custom" value="${esc(custom)}" maxlength="4" placeholder="oppure scrivi un'altra emoji" autocomplete="off"></div>`;
+};
 
 const catPicker = (kind, selected) => `<div class="cat-grid" role="radiogroup" aria-label="Categoria">${catsOf(kind).map((c) => `
   <label class="cat-opt"><input type="radio" name="categoryId" value="${c.id}" ${c.id === selected ? 'checked' : ''}>${icon(c)}<span>${esc(c.name)}</span></label>`).join('')}</div>`;
@@ -682,12 +705,12 @@ function openTx(t = null, preset = {}) {
   const rec = tx.recurringId ? state.recurring.find((r) => r.id === tx.recurringId) : null;
   const body = `
     <div class="seg type-seg"><label><input type="radio" name="type" value="expense" ${type === 'expense' ? 'checked' : ''}><span>Uscita</span></label><label><input type="radio" name="type" value="income" ${type === 'income' ? 'checked' : ''}><span>Entrata</span></label></div>
-    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" placeholder="0,00" autocomplete="off" value="${tx.amount ? moneyPlain(tx.amount) : ''}" ${isNew ? 'autofocus' : ''} aria-label="Importo"></label>
+    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" enterkeyhint="done" placeholder="0,00" autocomplete="off" value="${tx.amount ? moneyPlain(tx.amount) : ''}" ${isNew ? 'autofocus' : ''} aria-label="Importo"></label>
     ${rec ? `<p class="small muted">Generato dalla voce fissa «${esc(rec.name)}». Correggi l'importo se quello reale è diverso.</p>` : ''}
     <div id="catWrap">${catPicker(type, tx.categoryId || (type === 'expense' ? '' : catsOf('income')[0]?.id))}</div>
     <div class="grid2">
       <label class="field"><span>Data</span><input type="date" name="date" value="${tx.date}" required></label>
-      <label class="field"><span>Nota</span><input name="note" value="${esc(tx.note || '')}" maxlength="80" placeholder="facoltativa"></label>
+      <label class="field"><span>Nota</span><input name="note" value="${esc(tx.note || '')}" maxlength="80" placeholder="facoltativa" autocapitalize="sentences" enterkeyhint="done"></label>
     </div>
     ${personPicker(tx.personId || local.personId)}
     ${potOpts.length ? `<label class="field expense-only" ${type === 'income' ? 'hidden' : ''}><span>Paga con</span><select name="pot"><option value="">Budget giornaliero</option>${potOpts.map(([v, l]) => `<option value="${v}" ${v === potVal ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></label>` : ''}
@@ -716,7 +739,7 @@ function openSaveTx(t) {
   const name = t.fundId ? fundById(t.fundId)?.name : goalById(t.goalId)?.name;
   openSheet('Quota accantonata', `
     <p class="muted">${esc(name || '')} · ${fmtDate(t.date, { year: true })}</p>
-    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" value="${moneyPlain(t.amount)}" autofocus aria-label="Importo"></label>
+    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${moneyPlain(t.amount)}" autofocus aria-label="Importo"></label>
     <p class="small muted">Questa somma viene tolta dal budget del ciclo e messa da parte. Abbassala se questo mese non ce la fai: le quote dei cicli successivi si adattano.</p>`,
   async (f) => {
     const a = parseAmount(f.amount);
@@ -734,8 +757,8 @@ function openRec(r = null, type = 'expense') {
   const x = r || { type, name: '', amount: null, day: fromISO(today).getDate(), freq: 'monthly', startDate: cycleFor(today, state.settings.payday).start, personId: local.personId };
   const body = `
     <div class="seg type-seg"><label><input type="radio" name="type" value="expense" ${x.type === 'expense' ? 'checked' : ''}><span>Spesa fissa</span></label><label><input type="radio" name="type" value="income" ${x.type === 'income' ? 'checked' : ''}><span>Entrata</span></label></div>
-    <label class="field"><span>Nome</span><input name="name" value="${esc(x.name)}" required maxlength="50" placeholder="es. Affitto" ${r ? '' : 'autofocus'}></label>
-    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" value="${x.amount ? moneyPlain(x.amount) : ''}" placeholder="0,00" aria-label="Importo"></label>
+    <label class="field"><span>Nome</span><input name="name" autocapitalize="sentences" value="${esc(x.name)}" required maxlength="50" placeholder="es. Affitto" ${r ? '' : 'autofocus'}></label>
+    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${x.amount ? moneyPlain(x.amount) : ''}" placeholder="0,00" aria-label="Importo"></label>
     <div class="grid2">
       <label class="field"><span>Giorno del mese</span><select name="day">${dayOptions(x.day)}</select></label>
       <label class="field"><span>Frequenza</span><select name="freq">${Object.entries(FREQ).map(([k, v]) => `<option value="${k}" ${x.freq === k ? 'selected' : ''}>${v.label}</option>`).join('')}</select></label>
@@ -767,11 +790,11 @@ function openRec(r = null, type = 'expense') {
 function openFund(fd = null) {
   const x = fd || { name: '', icon: '📦', target: null, dueDate: '', repeat: 'yearly', initial: 0 };
   openSheet(fd ? 'Modifica accantonamento' : 'Nuovo accantonamento', `
-    <div class="grid-icon"><label class="field"><span>Icona</span><input name="icon" value="${esc(x.icon)}" maxlength="4" class="emoji"></label>
-    <label class="field"><span>Nome</span><input name="name" value="${esc(x.name)}" required placeholder="es. Assicurazione auto" ${fd ? '' : 'autofocus'}></label></div>
-    <div class="grid2"><label class="field"><span>Importo da pagare</span><input name="target" inputmode="decimal" value="${x.target ? moneyPlain(x.target) : ''}"></label>
+    ${iconPicker(x.icon)}
+    <div><label class="field"><span>Nome</span><input name="name" autocapitalize="sentences" value="${esc(x.name)}" required placeholder="es. Assicurazione auto" ${fd ? '' : 'autofocus'}></label></div>
+    <div class="grid2"><label class="field"><span>Importo da pagare</span><input name="target" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${x.target ? moneyPlain(x.target) : ''}"></label>
     <label class="field"><span>Scadenza</span><input type="date" name="dueDate" value="${x.dueDate}"></label></div>
-    <label class="field"><span>Già messo da parte</span><input name="initial" inputmode="decimal" value="${moneyPlain(x.initial || 0)}"></label>
+    <label class="field"><span>Già messo da parte</span><input name="initial" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${moneyPlain(x.initial || 0)}"></label>
     <label class="check"><input type="checkbox" name="repeat" ${x.repeat === 'yearly' ? 'checked' : ''}> Si ripete ogni anno</label>
     <label class="check"><input type="checkbox" name="paused" ${x.paused ? 'checked' : ''}> In pausa (nessuna quota nei prossimi cicli)</label>`,
   async (f) => {
@@ -791,12 +814,12 @@ function openFund(fd = null) {
 function openGoal(g = null) {
   const x = g || { name: '', icon: '🎯', target: null, deadline: '', monthly: null, initial: 0 };
   openSheet(g ? 'Modifica obiettivo' : 'Nuovo obiettivo', `
-    <div class="grid-icon"><label class="field"><span>Icona</span><input name="icon" value="${esc(x.icon)}" maxlength="4" class="emoji"></label>
-    <label class="field"><span>Nome</span><input name="name" value="${esc(x.name)}" required placeholder="es. Fondo emergenze" ${g ? '' : 'autofocus'}></label></div>
-    <div class="grid2"><label class="field"><span>Traguardo (vuoto = libero)</span><input name="target" inputmode="decimal" value="${x.target ? moneyPlain(x.target) : ''}"></label>
+    ${iconPicker(x.icon)}
+    <div><label class="field"><span>Nome</span><input name="name" autocapitalize="sentences" value="${esc(x.name)}" required placeholder="es. Fondo emergenze" ${g ? '' : 'autofocus'}></label></div>
+    <div class="grid2"><label class="field"><span>Traguardo (vuoto = libero)</span><input name="target" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${x.target ? moneyPlain(x.target) : ''}"></label>
     <label class="field"><span>Entro il</span><input type="date" name="deadline" value="${x.deadline || ''}"></label></div>
-    <div class="grid2"><label class="field"><span>Quota per ciclo</span><input name="monthly" inputmode="decimal" value="${x.monthly ? moneyPlain(x.monthly) : ''}"></label>
-    <label class="field"><span>Già risparmiato</span><input name="initial" inputmode="decimal" value="${moneyPlain(x.initial || 0)}"></label></div>
+    <div class="grid2"><label class="field"><span>Quota per ciclo</span><input name="monthly" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${x.monthly ? moneyPlain(x.monthly) : ''}"></label>
+    <label class="field"><span>Già risparmiato</span><input name="initial" inputmode="decimal" enterkeyhint="done" autocomplete="off" value="${moneyPlain(x.initial || 0)}"></label></div>
     <label class="check"><input type="checkbox" name="paused" ${x.paused ? 'checked' : ''}> In pausa</label>`,
   async (f) => {
     if (!f.name.trim()) { toast('Serve un nome', true); return false; }
@@ -817,7 +840,7 @@ function openPotMove(kind, id, mode) {
   const use = mode === 'use';
   openSheet(use ? `Spesa da «${pot.name}»` : `Versa in «${pot.name}»`, `
     <p class="muted">Disponibile: <b>${money(bal)}</b></p>
-    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" placeholder="0,00" autofocus aria-label="Importo" value="${use && kind === 'fund' && pot.target ? moneyPlain(Math.min(pot.target, Math.max(bal, 0))) : ''}"></label>
+    <label class="amount-field"><span class="cur">€</span><input name="amount" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="0,00" autofocus aria-label="Importo" value="${use && kind === 'fund' && pot.target ? moneyPlain(Math.min(pot.target, Math.max(bal, 0))) : ''}"></label>
     ${use ? `<div id="catWrap">${catPicker('expense', guessCat(state, pot.name))}</div>` : ''}
     <div class="grid2"><label class="field"><span>Data</span><input type="date" name="date" value="${todayISO()}"></label>
     <label class="field"><span>Nota</span><input name="note" value="${esc(use ? pot.name : 'Versamento extra')}"></label></div>
@@ -837,11 +860,11 @@ function openPotMove(kind, id, mode) {
 function openCat(c = null, kind = 'expense') {
   const x = c || { name: '', icon: '•', color: '#6b8f71', kind, limit: 0 };
   openSheet(c ? 'Modifica categoria' : 'Nuova categoria', `
-    <div class="grid-icon"><label class="field"><span>Icona</span><input name="icon" value="${esc(x.icon)}" maxlength="4" class="emoji"></label>
-    <label class="field"><span>Nome</span><input name="name" value="${esc(x.name)}" required maxlength="30"></label></div>
+    ${iconPicker(x.icon)}
+    <div><label class="field"><span>Nome</span><input name="name" autocapitalize="sentences" value="${esc(x.name)}" required maxlength="30"></label></div>
     <div class="grid2"><label class="field"><span>Colore</span><input type="color" name="color" value="${esc(x.color)}"></label>
     <label class="field"><span>Tipo</span><select name="kind"><option value="expense" ${x.kind === 'expense' ? 'selected' : ''}>Uscita</option><option value="income" ${x.kind === 'income' ? 'selected' : ''}>Entrata</option></select></label></div>
-    <label class="field"><span>Limite per ciclo (busta)</span><input name="limit" inputmode="decimal" placeholder="nessun limite" value="${x.limit ? moneyPlain(x.limit) : ''}" ${c ? 'autofocus' : ''}></label>`,
+    <label class="field"><span>Limite per ciclo (busta)</span><input name="limit" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="nessun limite" value="${x.limit ? moneyPlain(x.limit) : ''}" ${c ? 'autofocus' : ''}></label>`,
   async (f) => {
     if (!f.name.trim()) { toast('Serve un nome', true); return false; }
     upsert(state, 'categories', { ...(c || { order: state.categories.length }), name: f.name.trim(), icon: f.icon || '•', color: f.color, kind: f.kind, limit: parseAmount(f.limit) || 0 });
@@ -1142,7 +1165,13 @@ document.addEventListener('click', async (e) => {
     case 'add': openTx(null, { categoryId: el.dataset.cat }); break;
     case 'close-sheet': closeSheet(); break;
     case 'edit-tx': { const t = state.transactions.find((x) => x.id === id); if (t) openTx(t); break; }
-    case 'tx-save-more': { const form = sheet().querySelector('form'); const ok = await sheetSubmit?.(formData(form), true); if (ok) closeSheet(); break; }
+    case 'tx-save-more': {
+      if (el.disabled) break;
+      el.disabled = true;
+      const form = sheet().querySelector('form');
+      try { const ok = await sheetSubmit?.(formData(form), true); if (ok) closeSheet(); } finally { el.disabled = false; }
+      break;
+    }
     case 'tx-delete': if (confirm('Eliminare questo movimento?')) { remove(state, 'transactions', editing); closeSheet(); await commit('Movimento eliminato'); } break;
     case 'tx-prev': ui.txOffset++; render(); break;
     case 'tx-next': ui.txOffset = Math.max(0, ui.txOffset - 1); render(); break;
@@ -1241,6 +1270,12 @@ document.addEventListener('change', async (e) => {
     sheet().querySelectorAll('.expense-only').forEach((x) => { x.hidden = el.value !== 'expense'; });
     return;
   }
+  // griglia icone: scegliere un'icona svuota il campo "altra emoji"
+  if (el.name === 'icon' && el.type === 'radio') {
+    const c = el.closest('.field')?.querySelector('.icon-custom');
+    if (c) c.value = '';
+    return;
+  }
   if (el.dataset.setting) {
     const k = el.dataset.setting;
     const v = k === 'payday' ? Number(el.value) : el.value.trim();
@@ -1270,18 +1305,50 @@ document.addEventListener('change', async (e) => {
 });
 
 const searchLater = debounce(() => {
-  render();
-  const s = $('[data-bind="search"]');
-  if (s) { s.focus(); s.setSelectionRange(s.value.length, s.value.length); }
-}, 250);
+  const box = $('#txResults');
+  if (box) box.innerHTML = renderTx(true); else render();
+}, 200);
 document.addEventListener('input', (e) => {
   if (e.target.dataset.bind === 'search') { ui.search = e.target.value; searchLater(); }
+  if (e.target.classList?.contains('icon-custom') && e.target.value.trim()) {
+    e.target.closest('.field')?.querySelectorAll('input[name=icon]').forEach((r) => { r.checked = false; });
+  }
 });
 
 // tastiera: chiudi il foglio con Esc gestito dal dialog; tocco sullo sfondo chiude
-document.addEventListener('pointerdown', (e) => {
+// tocco sullo sfondo scuro chiude il foglio (non nei primi istanti: evita che un doppio tocco lo richiuda)
+document.addEventListener('click', (e) => {
   const d = sheet();
-  if (e.target === d) closeSheet();
+  if (e.target === d && Date.now() - sheetOpenedAt > 500) closeSheet();
+});
+// un tocco sullo sfondo non deve togliere il cursore dal campo (su iPhone chiuderebbe la tastiera)
+document.addEventListener('pointerdown', (e) => { if (e.target === sheet()) e.preventDefault(); });
+document.addEventListener('mousedown', (e) => { if (e.target === sheet()) e.preventDefault(); });
+
+// Invio sulla tastiera durante la configurazione iniziale = passa al campo successivo / Avanti
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Enter' || !e.target.matches?.('.ob input')) return;
+  e.preventDefault();
+  const fields = [...document.querySelectorAll('.ob input, .ob select')].filter((x) => x.offsetParent);
+  const next = fields[fields.indexOf(e.target) + 1];
+  if (next && next.tagName === 'INPUT') next.focus();
+  else { e.target.blur(); document.querySelector('[data-action="ob-next"]')?.click(); }
+});
+
+// Tastiera del telefono: il foglio resta sopra la tastiera (iPhone non ridimensiona la pagina)
+if (window.visualViewport) {
+  const vv = window.visualViewport;
+  const fit = () => {
+    const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    document.documentElement.style.setProperty('--kb', (kb > 80 ? kb : 0) + 'px');
+  };
+  vv.addEventListener('resize', fit);
+  vv.addEventListener('scroll', fit);
+}
+document.addEventListener('focusin', (e) => {
+  if (e.target.closest?.('.sheet-body') && e.target.matches('input, select, textarea')) {
+    setTimeout(() => e.target.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300);
+  }
 });
 
 // ---------- Avvio ----------
@@ -1305,7 +1372,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', applyThe
 
 function handleURL() {
   const p = new URLSearchParams(location.search);
-  if (!p.has('action') && !p.has('amount')) return;
+  if (!p.has('action') && !p.has('amount') && !p.has('tab')) return;
   if (state.settings.onboarded && (p.get('action') === 'add' || p.has('amount'))) {
     const name = (p.get('cat') || '').toLowerCase();
     const c = cats().find((x) => x.name.toLowerCase() === name || x.id === name);
@@ -1314,7 +1381,7 @@ function handleURL() {
       type: p.get('type') === 'income' ? 'income' : 'expense',
     });
   }
-  if (p.get('tab')) ui.tab = p.get('tab');
+  if (p.get('tab') && ['oggi', 'movimenti', 'piano', 'stats', 'altro'].includes(p.get('tab'))) { ui.tab = p.get('tab'); render(); }
   history.replaceState(null, '', location.pathname);
 }
 
