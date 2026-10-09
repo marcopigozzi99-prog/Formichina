@@ -1,5 +1,5 @@
 // Service worker: l'app funziona offline. Cambia VERSION a ogni rilascio per aggiornare la cache.
-const VERSION = 'formichina-v1.0.1';
+const VERSION = 'formichina-v1.0.2';
 const ASSETS = [
   './', './index.html', './styles.css', './manifest.webmanifest',
   './app.js', './util.js', './store.js', './calc.js', './charts.js', './csv.js', './sync.js',

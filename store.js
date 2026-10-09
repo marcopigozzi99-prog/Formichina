@@ -185,13 +185,13 @@ export function demoState() {
   const s = emptyState();
   const t = todayISO();
   const cat = (n) => s.categories.find((c) => c.name === n).id;
-  s.settings = { ...s.settings, name: 'Marco', payday: 27, onboarded: true };
-  s.people.push({ id: 'p-2', name: 'Giulia', updatedAt: now() });
+  s.settings = { ...s.settings, name: 'Mario Rossi', payday: 27, onboarded: true };
+  s.people.push({ id: 'p-2', name: 'Anna Rossi', updatedAt: now() });
   const start = addMonths(t, -3);
   const rec = (name, type, amount, category, day, freq = 'monthly', startDate = start) =>
     upsert(s, 'recurring', { name, type, amount, categoryId: cat(category), day, freq, startDate, personId: 'p-me' });
-  rec('Stipendio Marco', 'income', 185000, 'Stipendio', 27);
-  rec('Stipendio Giulia', 'income', 142000, 'Stipendio', 10);
+  rec('Stipendio Mario Rossi', 'income', 185000, 'Stipendio', 27);
+  rec('Stipendio Anna Rossi', 'income', 142000, 'Stipendio', 10);
   rec('Mutuo', 'expense', 68000, 'Casa', 1);
   rec('Luce e gas', 'expense', 13000, 'Bollette', 15, 'bimonthly');
   rec('Internet', 'expense', 2990, 'Bollette', 5);

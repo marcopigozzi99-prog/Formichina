@@ -526,7 +526,7 @@ function renderOnboarding() {
       <label class="field"><span>Giorno in cui arriva lo stipendio</span><select id="ob-payday">${Array.from({ length: 31 }, (_, i) => `<option ${d.payday === i + 1 ? 'selected' : ''}>${i + 1}</option>`).join('')}</select></label>
       <label class="field"><span>Stipendio netto mensile</span><input id="ob-salary" inputmode="decimal" placeholder="es. 1.650" value="${esc(d.salary)}"></label>
       <details ${d.income2.amount ? 'open' : ''}><summary>Un'altra entrata fissa (es. stipendio del partner)</summary>
-        <label class="field"><span>Nome</span><input id="ob-i2-name" placeholder="es. Stipendio Giulia" value="${esc(d.income2.name)}"></label>
+        <label class="field"><span>Nome</span><input id="ob-i2-name" placeholder="es. Stipendio Mario Rossi" value="${esc(d.income2.name)}"></label>
         <div class="grid2"><label class="field"><span>Importo</span><input id="ob-i2-amount" inputmode="decimal" value="${esc(d.income2.amount)}"></label>
         <label class="field"><span>Giorno</span><input id="ob-i2-day" type="number" min="1" max="31" value="${d.income2.day}"></label></div>
       </details>${nav()}</section>`;
