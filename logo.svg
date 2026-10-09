@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" rx="112" fill="#2f5d46"/><g transform="translate(256 256) scale(1.0) translate(-256 -256)"><circle cx="256" cy="262" r="150" fill="#3b7357" opacity=".55"/><circle cx="256" cy="262" r="196" fill="none" stroke="#e0b44c" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" opacity=".5"/>
+<line x1="374.8" y1="143.2" x2="362.1" y2="155.9" stroke="#e0b44c" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+<line x1="374.8" y1="380.8" x2="362.1" y2="368.1" stroke="#e0b44c" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+<line x1="137.2" y1="380.8" x2="149.9" y2="368.1" stroke="#e0b44c" stroke-width="5" stroke-linecap="round" opacity=".7"/>
+<line x1="137.2" y1="143.2" x2="149.9" y2="155.9" stroke="#e0b44c" stroke-width="5" stroke-linecap="round" opacity=".7"/><g transform="translate(306.7 76.5) rotate(-22.5) scale(1 1.00)">
+  <circle r="21.5" fill="#b5862a"/>
+  <circle r="18.5" fill="#e0b44c"/>
+  <circle r="12.5" fill="none" stroke="#b5862a" stroke-width="1.9" opacity=".55"/>
+  <path d="M-11.2 -6.0 A13.3 13.3 0 0 1 2.6 -12.9" fill="none" stroke="#f3d27e" stroke-width="2.8" stroke-linecap="round"/>
+</g>
+<g transform="translate(394.6 126.2) rotate(-13.5) scale(1 1.00)">
+  <circle r="23.2" fill="#b5862a"/>
+  <circle r="20.0" fill="#e0b44c"/>
+  <circle r="13.5" fill="none" stroke="#b5862a" stroke-width="2.1" opacity=".55"/>
+  <path d="M-12.1 -6.5 A14.4 14.4 0 0 1 2.8 -13.9" fill="none" stroke="#f3d27e" stroke-width="3.0" stroke-linecap="round"/>
+</g>
+<g transform="translate(445.3 212.3) rotate(-4.5) scale(1 1.00)">
+  <circle r="25.0" fill="#b5862a"/>
+  <circle r="21.5" fill="#e0b44c"/>
+  <circle r="14.5" fill="none" stroke="#b5862a" stroke-width="2.2" opacity=".55"/>
+  <path d="M-13.0 -7.0 A15.5 15.5 0 0 1 3.0 -15.0" fill="none" stroke="#f3d27e" stroke-width="3.2" stroke-linecap="round"/>
+</g>
+<g transform="translate(445.3 311.7) rotate(4.5) scale(1 1.00)">
+  <circle r="21.5" fill="#b5862a"/>
+  <circle r="18.5" fill="#e0b44c"/>
+  <circle r="12.5" fill="none" stroke="#b5862a" stroke-width="1.9" opacity=".55"/>
+  <path d="M-11.2 -6.0 A13.3 13.3 0 0 1 2.6 -12.9" fill="none" stroke="#f3d27e" stroke-width="2.8" stroke-linecap="round"/>
+</g>
+<g transform="translate(394.6 397.8) rotate(13.5) scale(1 1.00)">
+  <circle r="23.2" fill="#b5862a"/>
+  <circle r="20.0" fill="#e0b44c"/>
+  <circle r="13.5" fill="none" stroke="#b5862a" stroke-width="2.1" opacity=".55"/>
+  <path d="M-12.1 -6.5 A14.4 14.4 0 0 1 2.8 -13.9" fill="none" stroke="#f3d27e" stroke-width="3.0" stroke-linecap="round"/>
+</g>
+<g transform="translate(306.7 447.5) rotate(22.5) scale(1 1.00)">
+  <circle r="25.0" fill="#b5862a"/>
+  <circle r="21.5" fill="#e0b44c"/>
+  <circle r="14.5" fill="none" stroke="#b5862a" stroke-width="2.2" opacity=".55"/>
+  <path d="M-13.0 -7.0 A15.5 15.5 0 0 1 3.0 -15.0" fill="none" stroke="#f3d27e" stroke-width="3.2" stroke-linecap="round"/>
+</g>
+<g transform="translate(205.3 447.5) rotate(31.5) scale(1 1.00)">
+  <circle r="21.5" fill="#b5862a"/>
+  <circle r="18.5" fill="#e0b44c"/>
+  <circle r="12.5" fill="none" stroke="#b5862a" stroke-width="1.9" opacity=".55"/>
+  <path d="M-11.2 -6.0 A13.3 13.3 0 0 1 2.6 -12.9" fill="none" stroke="#f3d27e" stroke-width="2.8" stroke-linecap="round"/>
+</g>
+<g transform="translate(117.4 397.8) rotate(40.5) scale(1 1.00)">
+  <circle r="23.2" fill="#b5862a"/>
+  <circle r="20.0" fill="#e0b44c"/>
+  <circle r="13.5" fill="none" stroke="#b5862a" stroke-width="2.1" opacity=".55"/>
+  <path d="M-12.1 -6.5 A14.4 14.4 0 0 1 2.8 -13.9" fill="none" stroke="#f3d27e" stroke-width="3.0" stroke-linecap="round"/>
+</g>
+<g transform="translate(66.7 311.7) rotate(49.5) scale(1 1.00)">
+  <circle r="25.0" fill="#b5862a"/>
+  <circle r="21.5" fill="#e0b44c"/>
+  <circle r="14.5" fill="none" stroke="#b5862a" stroke-width="2.2" opacity=".55"/>
+  <path d="M-13.0 -7.0 A15.5 15.5 0 0 1 3.0 -15.0" fill="none" stroke="#f3d27e" stroke-width="3.2" stroke-linecap="round"/>
+</g>
+<g transform="translate(66.7 212.3) rotate(58.5) scale(1 1.00)">
+  <circle r="21.5" fill="#b5862a"/>
+  <circle r="18.5" fill="#e0b44c"/>
+  <circle r="12.5" fill="none" stroke="#b5862a" stroke-width="1.9" opacity=".55"/>
+  <path d="M-11.2 -6.0 A13.3 13.3 0 0 1 2.6 -12.9" fill="none" stroke="#f3d27e" stroke-width="2.8" stroke-linecap="round"/>
+</g>
+<g transform="translate(117.4 126.2) rotate(67.5) scale(1 1.00)">
+  <circle r="23.2" fill="#b5862a"/>
+  <circle r="20.0" fill="#e0b44c"/>
+  <circle r="13.5" fill="none" stroke="#b5862a" stroke-width="2.1" opacity=".55"/>
+  <path d="M-12.1 -6.5 A14.4 14.4 0 0 1 2.8 -13.9" fill="none" stroke="#f3d27e" stroke-width="3.0" stroke-linecap="round"/>
+</g>
+<g transform="translate(205.3 76.5) rotate(76.5) scale(1 1.00)">
+  <circle r="25.0" fill="#b5862a"/>
+  <circle r="21.5" fill="#e0b44c"/>
+  <circle r="14.5" fill="none" stroke="#b5862a" stroke-width="2.2" opacity=".55"/>
+  <path d="M-13.0 -7.0 A15.5 15.5 0 0 1 3.0 -15.0" fill="none" stroke="#f3d27e" stroke-width="3.2" stroke-linecap="round"/>
+</g><g transform="translate(256 262) scale(1.08) translate(-262 -262)">
+<g id="ant">
+  <!-- zampe (dietro al corpo) -->
+  <path d="M248 286 L214 318 L190 362" fill="none" stroke="#fbf6ea" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M262 292 L258 334 L244 378" fill="none" stroke="#fbf6ea" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M276 288 L304 326 L330 364" fill="none" stroke="#fbf6ea" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- addome -->
+  <ellipse cx="176" cy="268" rx="70" ry="52" transform="rotate(-18 176 268)" fill="#fbf6ea"/>
+  <path d="M140 236 Q150 270 136 302" fill="none" stroke="#e9dfc8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M174 222 Q186 262 172 306" fill="none" stroke="#e9dfc8" stroke-width="7" stroke-linecap="round"/>
+  <!-- peziolo -->
+  <ellipse cx="238" cy="280" rx="14" ry="12" fill="#fbf6ea"/>
+  <!-- torace -->
+  <ellipse cx="268" cy="274" rx="34" ry="23" transform="rotate(-22 268 274)" fill="#fbf6ea"/>
+  <!-- testa -->
+  <circle cx="320" cy="236" r="32" fill="#fbf6ea"/>
+  <circle cx="330" cy="228" r="7" fill="#1f3a2c"/>
+  <circle cx="332.5" cy="225.5" r="2.4" fill="#fbf6ea"/>
+  <!-- antenne -->
+  <path d="M312 206 Q300 160 330 140" fill="none" stroke="#fbf6ea" stroke-width="8" stroke-linecap="round"/>
+  <path d="M330 206 Q338 168 372 160" fill="none" stroke="#fbf6ea" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="330" cy="140" r="7" fill="#fbf6ea"/>
+  <circle cx="372" cy="160" r="7" fill="#fbf6ea"/>
+  <!-- moneta tenuta tra le mandibole -->
+  <g transform="translate(372.0 262.0) rotate(-12.0) scale(1 1.00)">
+  <circle r="30.0" fill="#b5862a"/>
+  <circle r="25.8" fill="#e0b44c"/>
+  <circle r="17.4" fill="none" stroke="#b5862a" stroke-width="2.7" opacity=".55"/>
+  <path d="M-15.6 -8.4 A18.6 18.6 0 0 1 3.6 -18.0" fill="none" stroke="#f3d27e" stroke-width="3.9" stroke-linecap="round"/>
+</g>
+  <!-- zampa anteriore che abbraccia la moneta -->
+  <path d="M284 266 L326 280 L352 274" fill="none" stroke="#fbf6ea" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M344 248 Q356 254 352 266" fill="none" stroke="#fbf6ea" stroke-width="8" stroke-linecap="round"/>
+</g></g></g></svg>

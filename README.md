@@ -19,7 +19,7 @@ I dati restano nel browser del telefono. Nessun account, nessun server obbligato
 ## Pubblicare su GitHub Pages (come il ricettario)
 
 1. Su GitHub crea un nuovo repository, ad esempio `Formichina` (pubblico).
-2. **Add file → Upload files**: trascina *tutto il contenuto* di questa cartella (`index.html`, `styles.css`, `sw.js`, `manifest.webmanifest`, `firestore.rules`, le cartelle `js/` e `icons/`). Poi **Commit changes**.
+2. **Add file → Upload files**: seleziona *tutti i file* di questa cartella (sono tutti sullo stesso livello, senza sottocartelle) e trascinali. Poi **Commit changes**.
 3. **Settings → Pages → Branch: `main` / root → Save**.
 4. Dopo un minuto l'app è su `https://<tuo-utente>.github.io/Formichina/`.
 
@@ -32,7 +32,7 @@ Il repository contiene solo il codice: i tuoi dati non finiscono mai su GitHub.
 Installarla è importante: su iPhone, Safari può cancellare i dati dei siti non aperti per settimane, ma non quelli delle app aggiunte alla Home. In *Altro → Dati* tocca anche "Proteggi i dati dalla pulizia del browser".
 
 ### Aggiornare l'app
-Carica i file modificati e cambia il numero in `sw.js` (`const VERSION = 'formichina-v1.0.1'`). Al riavvio successivo l'app si aggiorna.
+Carica i file modificati e aumenta il numero in `sw.js` (es. da `formichina-v1.0.1` a `formichina-v1.0.2`). Al riavvio successivo l'app si aggiorna.
 
 ## Sincronizzazione di coppia (facoltativa)
 
@@ -50,11 +50,11 @@ Aprire `.../Formichina/?action=add&amount=4,50&cat=Bar e ristoranti&note=Caffè`
 ## Struttura
 | File | Contenuto |
 | --- | --- |
-| `js/calc.js` | ciclo, voci fisse, quote di accantonamento, budget giornaliero, statistiche |
-| `js/store.js` | dati, salvataggio in IndexedDB, unione per la sync, dati di esempio |
-| `js/app.js` | interfaccia |
-| `js/csv.js` | lettura estratti conto |
-| `js/sync.js` | cifratura e Firebase |
-| `js/charts.js` | grafici SVG |
+| `calc.js` | ciclo, voci fisse, quote di accantonamento, budget giornaliero, statistiche |
+| `store.js` | dati, salvataggio in IndexedDB, unione per la sync, dati di esempio |
+| `app.js` | interfaccia |
+| `csv.js` | lettura estratti conto |
+| `sync.js` | cifratura e Firebase |
+| `charts.js` | grafici SVG |
 
 Importi salvati in centesimi interi; nessuna libreria esterna (Firebase si carica solo se attivi la sync).

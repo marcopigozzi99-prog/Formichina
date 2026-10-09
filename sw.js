@@ -1,9 +1,9 @@
 // Service worker: l'app funziona offline. Cambia VERSION a ogni rilascio per aggiornare la cache.
-const VERSION = 'formichina-v1.0.0';
+const VERSION = 'formichina-v1.0.1';
 const ASSETS = [
   './', './index.html', './styles.css', './manifest.webmanifest',
-  './js/app.js', './js/util.js', './js/store.js', './js/calc.js', './js/charts.js', './js/csv.js', './js/sync.js',
-  './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png', './icons/shortcut-add.png', './icons/logo.svg',
+  './app.js', './util.js', './store.js', './calc.js', './charts.js', './csv.js', './sync.js',
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './shortcut-add.png', './logo.svg',
 ];
 
 self.addEventListener('install', (e) => {
