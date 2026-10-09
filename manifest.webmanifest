@@ -1,0 +1,31 @@
+{
+  "name": "Formichina – budget giornaliero",
+  "short_name": "Formichina",
+  "description": "Quanto puoi spendere oggi, senza collegare banca o carte. I dati restano sul tuo telefono.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f1e8",
+  "theme_color": "#2f5d46",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Aggiungi spesa",
+      "short_name": "Spesa",
+      "url": "./?action=add",
+      "icons": [{ "src": "icons/shortcut-add.png", "sizes": "96x96", "type": "image/png" }]
+    },
+    {
+      "name": "Movimenti",
+      "url": "./?tab=movimenti",
+      "icons": [{ "src": "icons/shortcut-add.png", "sizes": "96x96", "type": "image/png" }]
+    }
+  ]
+}

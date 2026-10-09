@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Formichina: un documento per famiglia, con nome derivato dalla frase segreta (40 caratteri).
+    // Il contenuto è cifrato sul telefono: Firebase vede solo un blocco illeggibile.
+    match /budgets/{docId} {
+      allow get, delete: if request.auth != null && docId.size() == 40;
+      allow list: if false; // nessuno può elencare i documenti degli altri
+      allow create, update: if request.auth != null
+        && docId.size() == 40
+        && request.resource.data.keys().hasOnly(['data', 'by', 'v', 'updatedAt'])
+        && request.resource.data.data is string
+        && request.resource.data.data.size() < 1048000;
+    }
+
+    // Se usi lo stesso progetto del ricettario, lascia qui sotto le sue regole già esistenti.
+  }
+}
