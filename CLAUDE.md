@@ -12,7 +12,7 @@ Online su https://marcopigozzi99-prog.github.io/Formichina/ (GitHub Pages, ramo 
 - **Privacy prima di tutto**: niente collegamenti a banche o carte, niente analytics, niente servizi esterni nuovi senza il suo sì. I dati restano sul telefono. La sincronizzazione di coppia (Firebase) è facoltativa e cifrata sul telefono prima dell'invio: non indebolirla.
 - **Struttura piatta**: tutti i file stanno nella cartella principale, senza sottocartelle, e si richiamano con percorsi relativi (`./app.js`). È una scelta voluta: non creare cartelle.
 - **Niente build**: JavaScript, HTML e CSS semplici, senza framework né npm. Le icone sono generate dal logo `logo.svg`.
-- **Aggiornamenti**: a ogni modifica pubblicata aumenta il numero di versione in `sw.js` (es. `formichina-v1.0.7` → `v1.0.8`), altrimenti i telefoni restano sulla versione vecchia.
+- **Aggiornamenti**: a ogni modifica pubblicata aumenta il numero di versione in `sw.js` (es. `formichina-v1.0.4` → `v1.0.5`), altrimenti i telefoni restano sulla versione vecchia.
 - **Uso dal telefono**: campi di almeno 16 px (niente zoom automatico su iPhone), niente doppio tocco che ingrandisce, la tastiera non deve coprire i pulsanti, e nei campi giorno si usano menu a tendina.
 - **Dati di esempio**: mai nomi veri di persone (per esempio quello della moglie di Marco) nei testi segnaposto o nei dati demo.
 - **Firebase**: le regole sono in `firestore.rules`. Se le cambi, spiega a Marco cosa deve incollare nella console Firebase: non puoi farlo tu.
